@@ -1,0 +1,71 @@
+#include <iostream>
+#include <climits>
+
+using namespace std;
+
+int minCoins(int coins[], int numCoins, int target) {
+    int dp[target + 1];
+    dp[0] = 0;
+
+    for (int i = 1; i <= target; ++i) {
+        dp[i] = INT_MAX;
+        for (int j = 0; j < numCoins; ++j) {
+            if (i >= coins[j] && dp[i - coins[j]] != INT_MAX) {
+                dp[i] = min(dp[i], dp[i - coins[j]] + 1);
+            }
+        }
+    }
+
+    return dp[target];
+}
+
+void printCoinsUsed(int coins[], int numCoins, int target) {
+    int dp[target + 1];
+    dp[0] = 0;
+
+    for (int i = 1; i <= target; ++i) {
+        dp[i] = -1;
+        for (int j = 0; j < numCoins; ++j) {
+            if (i >= coins[j] && dp[i - coins[j]] != -1 && (dp[i] == -1 || dp[i - coins[j]] + 1 < dp[i])) {
+                dp[i] = dp[i - coins[j]] + 1;
+            }
+        }
+    }
+
+    cout << "The coins are:";
+    int remaining = target;
+    while (remaining > 0) {
+        for (int j = 0; j < numCoins; ++j) {
+            if (remaining >= coins[j] && dp[remaining - coins[j]] == dp[remaining] - 1) {
+                cout << " " << coins[j];
+                remaining -= coins[j];
+                break;
+            }
+        }
+    }
+    cout << " Minimum number of coins: " << dp[target] << endl;
+}
+
+int main() {
+    int numCoins;
+    cout << "Enter the number of coins: ";
+    cin >> numCoins;
+
+    int coins[numCoins];
+    cout << "Enter coin elements: ";
+    for (int i = 0; i < numCoins; ++i) {
+        cin >> coins[i];
+    }
+
+    int targetSum;
+    cout << "Enter the target sum: ";
+    cin >> targetSum;
+
+    int minCoinCount = minCoins(coins, numCoins, targetSum);
+    cout << "Minimum number of coins: " << minCoinCount << endl;
+
+    cout << "Output using coins: ";
+    printCoinsUsed(coins, numCoins, targetSum);
+
+    return 0;
+}
