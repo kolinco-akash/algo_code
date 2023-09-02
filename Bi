@@ -1,0 +1,56 @@
+#include <iostream>
+
+using namespace std;
+
+// Iterative Binary Search
+bool binarySearchIterative(int arr[], int N, int key) {
+    int left = 0;
+    int right = N - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key) {
+            return true;
+        } else if (arr[mid] < key) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return false;
+}
+
+// Recursive Binary Search
+bool binarySearchRecursive(int arr[], int key, int left, int right) {
+    if (left > right) {
+        return false;
+    }
+    int mid = left + (right - left) / 2;
+    if (arr[mid] == key) {
+        return true;
+    } else if (arr[mid] < key) {
+        return binarySearchRecursive(arr, key, mid + 1, right);
+    } else {
+        return binarySearchRecursive(arr, key, left, mid - 1);
+    }
+}
+
+int main() {
+    int N, K;
+    cin >> N >> K;
+    int arr[N];
+
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
+    }
+
+    bool foundIterative = binarySearchIterative(arr, N, K);
+    bool foundRecursive = binarySearchRecursive(arr, K, 0, N - 1);
+
+    if (foundIterative || foundRecursive) {
+        cout << "true" << endl;
+    } else {
+        cout << "false" << endl;
+    }
+
+    return 0;
+}
